@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: centres
+  labels:
+    app: centres
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    name: http
+    nodePort: 30003
+  selector:
+    app: centres
+---
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: centres
+spec:
+  selector:
+    matchLabels:
+      app: centres
+  replicas: 1 
+  template: 
+    metadata:
+      labels:
+        app: centres
+    spec:
+      containers:
+      - name: centres
+        image: xap/centres:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        env:
+        - name: ENV_PREFIX
+          value: KidsXap
+        - name: APP_SUBSCRIBERID
+          value: "f48ec90a-0afe-4e01-ac06-2b93bbb19c5d"
+      hostAliases:
+      - ip: "10.10.10.139"
+        hostnames:
+          - "id.dev.kidsxap.com.au"
+          - "financeapi.dev.kidsxap.com.au"
+---

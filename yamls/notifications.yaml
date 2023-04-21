@@ -1,0 +1,143 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: notifications
+  labels:
+    app: notifications
+spec:
+  type: NodePort
+  ports:
+  - port: 80 
+    name: http
+    nodePort: 30002
+  selector:
+    app: notifications
+---
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: notifications
+spec:
+  selector:
+    matchLabels:
+      app: notifications
+  replicas: 1 
+  template: 
+    metadata:
+      labels:
+        app: notifications
+    spec:
+      containers:
+      - name: notifications
+        image: xap/notifications
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        env:
+        - name: ENV_PREFIX
+          value: KidsXap
+        - name: APP_SUBSCRIBERID
+          value: "f48ec90a-0afe-4e01-ac06-2b93bbb19c5d"
+        - name: SERVICEBUS_PUBLISHONLY
+          value: "true"
+        - name: OltpExporterEndpointUrl
+          value: "http://jaeger-collector.observability.svc.cluster.local:14250/api/v2/spans"
+      hostAliases:
+      - ip: "10.10.10.111"
+        hostnames:
+          - "id.dev.kidsxap.com.au"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notifications
+  labels:
+    app: notifications-email-consumer
+spec:
+  type: NodePort
+  ports:
+  - port: 80 
+    name: http
+    nodePort: 30002
+  selector:
+    app: notifications-email-consumer
+---
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: notifications-email-consumer
+spec:
+  selector:
+    matchLabels:
+      app: notifications-email-consumer
+  replicas: 1 
+  template: 
+    metadata:
+      labels:
+        app: notifications-email-consumer
+    spec:
+      containers:
+      - name: notifications-email-consumer
+        image: xap/notifications/email/worker
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        env:
+        - name: ENV_PREFIX
+          value: KidsXap
+        - name: APP_SUBSCRIBERID
+          value: "f48ec90a-0afe-4e01-ac06-2b93bbb19c5d"
+        - name: SERVICEBUS_PUBLISHONLY
+          value: "false"
+      hostAliases:
+      - ip: "10.10.10.111"
+        hostnames:
+          - "id.dev.kidsxap.com.au"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notifications
+  labels:
+    app: notifications-push-consumer
+spec:
+  type: NodePort
+  ports:
+  - port: 80 
+    name: http
+    nodePort: 30002
+  selector:
+    app: notifications-push-consumer
+---
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: notifications-push-consumer
+spec:
+  selector:
+    matchLabels:
+      app: notifications-push-consumer
+  replicas: 1 
+  template: 
+    metadata:
+      labels:
+        app: notifications-push-consumer
+    spec:
+      containers:
+      - name: notifications-push-consumer
+        image: xap/notifications/push/worker
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        env:
+        - name: ENV_PREFIX
+          value: KidsXap
+        - name: APP_SUBSCRIBERID
+          value: "f48ec90a-0afe-4e01-ac06-2b93bbb19c5d"
+        - name: SERVICEBUS_PUBLISHONLY
+          value: "false"
+      hostAliases:
+      - ip: "10.10.10.111"
+        hostnames:
+          - "id.dev.kidsxap.com.au"
+---

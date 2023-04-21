@@ -1,0 +1,280 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: families
+  labels:
+    app: families
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    name: http
+    nodePort: 30014
+  selector:
+    app: families
+---
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: families
+spec:
+  selector:
+    matchLabels:
+      app: families
+  replicas: 1 
+  template: 
+    metadata:
+      labels:
+        app: families
+    spec:
+      containers:
+      - name: families
+        image: xap/families:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        env:
+        - name: ENV_PREFIX
+          value: KidsXap
+        - name: APP_SUBSCRIBERID
+          value: "f48ec90a-0afe-4e01-ac06-2b93bbb19c5d"
+        - name: SERVICEBUS_PUBLISHONLY
+          value: "true"
+      hostAliases:
+      - ip: "10.10.10.139"
+        hostnames:
+          - "localhost"
+          - "financeapi.dev.kidsxap.com.au"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: families-person
+  labels:
+    app: families-person
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    name: http
+    nodePort: 30028
+  selector:
+    app: families-person
+---
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: families-person
+spec:
+  selector:
+    matchLabels:
+      app: families-person
+  replicas: 1 
+  template: 
+    metadata:
+      labels:
+        app: families-person
+    spec:
+      containers:
+      - name: families-person
+        image: xap/families-person:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        env:
+        - name: ENV_PREFIX
+          value: KidsXap
+        - name: APP_SUBSCRIBERID
+          value: "f48ec90a-0afe-4e01-ac06-2b93bbb19c5d"
+        - name: SERVICEBUS_PUBLISHONLY
+          value: "true"
+      hostAliases:
+      - ip: "10.10.10.139"
+        hostnames:
+          - "id.dev.kidsxap.com.au"
+          - "financeapi.dev.kidsxap.com.au"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: families-personshell
+  labels:
+    app: families-personshell
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    name: http
+    nodePort: 30027
+  selector:
+    app: families-personshell
+---
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: families-personshell
+spec:
+  selector:
+    matchLabels:
+      app: families-personshell
+  replicas: 1 
+  template: 
+    metadata:
+      labels:
+        app: families-personshell
+    spec:
+      containers:
+      - name: families-personshell
+        image: xap/families-personshell:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        env:
+        - name: ENV_PREFIX
+          value: KidsXap
+        - name: APP_SUBSCRIBERID
+          value: "f48ec90a-0afe-4e01-ac06-2b93bbb19c5d"
+        - name: SERVICEBUS_PUBLISHONLY
+          value: "true"
+      hostAliases:
+      - ip: "10.10.10.139"
+        hostnames:
+          - "id.dev.kidsxap.com.au"
+          - "financeapi.dev.kidsxap.com.au"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: families-familyshell
+  labels:
+    app: families-familyshell
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    name: http
+    nodePort: 30026
+  selector:
+    app: families-familyshell
+---
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: families-familyshell
+spec:
+  selector:
+    matchLabels:
+      app: families-familyshell
+  replicas: 1 
+  template: 
+    metadata:
+      labels:
+        app: families-familyshell
+    spec:
+      containers:
+      - name: families-familyshell
+        image: xap/families-familyshell:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        env:
+        - name: ENV_PREFIX
+          value: KidsXap
+        - name: APP_SUBSCRIBERID
+          value: "f48ec90a-0afe-4e01-ac06-2b93bbb19c5d"
+        - name: SERVICEBUS_PUBLISHONLY
+          value: "true"
+      hostAliases:
+      - ip: "10.10.10.139"
+        hostnames:
+          - "id.dev.kidsxap.com.au"
+          - "financeapi.dev.kidsxap.com.au"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: families-familyguardian
+  labels:
+    app: families-familyguardian
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    name: http
+    nodePort: 30025
+  selector:
+    app: families-familyguardian
+---
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: families-familyguardian
+spec:
+  selector:
+    matchLabels:
+      app: families-familyguardian
+  replicas: 1 
+  template: 
+    metadata:
+      labels:
+        app: families-familyguardian
+    spec:
+      containers:
+      - name: families-familyguardian
+        image: xap/families-familyguardian:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        env:
+        - name: ENV_PREFIX
+          value: KidsXap
+        - name: APP_SUBSCRIBERID
+          value: "f48ec90a-0afe-4e01-ac06-2b93bbb19c5d"
+        - name: SERVICEBUS_PUBLISHONLY
+          value: "true"
+      hostAliases:
+      - ip: "10.10.10.139"
+        hostnames:
+          - "id.dev.kidsxap.com.au"
+          - "financeapi.dev.kidsxap.com.au"
+---
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: families-consumer
+spec:
+  selector:
+    matchLabels:
+      app: families-consumer
+  replicas: 1
+  template: 
+    metadata:
+      labels:
+        app: families-consumer
+    spec:
+      containers:
+      - name: families-consumer
+        image: xap/families/worker
+        imagePullPolicy: IfNotPresent
+        resources:
+         requests:
+          memory: "0.25Gi"
+          cpu: "100m"
+        env:
+        - name: ENV_PREFIX
+          value: KidsXap
+        - name: APP_SUBSCRIBERID
+          value: "f48ec90a-0afe-4e01-ac06-2b93bbb19c5d"
+        - name: PUSHGATEWAY_ENDPOINT
+          value: "http://pushgateway-prometheus-pushgateway.monitoring.svc.cluster.local:9091/metrics"
+        - name: KidsXap__MassTransit__HostName
+          value: "xap-jigneshc.servicebus.windows.net"
+        - name: KidsXap__MassTransit__UserName
+          value: "RootManageSharedAccessKey"
+        - name: KidsXap__MassTransit__Password
+          value: "L+NFxRK0Xve//Md1IQHl0TOyhZa1ZihXo5n4TEVImnI="
+        - name: KidsXap__MassTransit__TransportType
+          value: "AzureServiceBus"
+        - name: SERVICEBUS_PUBLISHONLY
+          value: "false"
+---
